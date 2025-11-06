@@ -1,0 +1,112 @@
+# Road Safety Infrastructure Analysis Configuration
+
+# AI Model Configuration
+models:
+  detection:
+    yolo_model: "yolov8n.pt"  # or yolov8s.pt, yolov8m.pt for better accuracy
+    confidence_threshold: 0.5
+    iou_threshold: 0.45
+    input_size: [640, 640]
+  
+  segmentation:
+    model_type: "deeplabv3"
+    num_classes: 7  # pavement, markings, studs, signs, furniture, vru_path, background
+  
+  change_detection:
+    similarity_threshold: 0.85
+    change_threshold: 0.3
+
+# Detection Classes
+detection_classes:
+  - id: 0
+    name: "pavement_crack"
+    severity_weights:
+      minor: 1.0
+      moderate: 2.0
+      severe: 4.0
+  - id: 1
+    name: "faded_marking"
+    severity_weights:
+      minor: 1.5
+      moderate: 3.0
+      severe: 5.0
+  - id: 2
+    name: "missing_stud"
+    severity_weights:
+      minor: 1.0
+      moderate: 2.0
+      severe: 3.0
+  - id: 3
+    name: "damaged_sign"
+    severity_weights:
+      minor: 2.0
+      moderate: 4.0
+      severe: 6.0
+  - id: 4
+    name: "roadside_furniture_damage"
+    severity_weights:
+      minor: 1.5
+      moderate: 3.0
+      severe: 5.0
+  - id: 5
+    name: "vru_path_obstruction"
+    severity_weights:
+      minor: 2.0
+      moderate: 4.0
+      severe: 6.0
+
+# Video Processing
+video_processing:
+  frame_extraction:
+    fps: 1  # Extract 1 frame per second
+    max_frames: 1000
+  
+  preprocessing:
+    resize_width: 1280
+    resize_height: 720
+    normalize: true
+    stabilize: true
+  
+  alignment:
+    gps_tolerance: 50  # meters
+    temporal_tolerance: 5  # seconds
+
+# Geospatial Configuration
+geospatial:
+  coordinate_system: "EPSG:4326"  # WGS84
+  default_zoom: 15
+  map_provider: "openstreetmap"  # or "mapbox" if API key provided
+  
+  mapbox:
+    api_key: ""  # Set in .env file
+
+# Reporting
+reporting:
+  output_dir: "reports"
+  template_dir: "templates"
+  include_confidence_scores: true
+  include_heatmaps: true
+  max_issues_per_page: 20
+
+# API Configuration
+api:
+  host: "0.0.0.0"
+  port: 8000
+  max_upload_size: 500  # MB
+  allowed_extensions: [".mp4", ".avi", ".mov", ".mkv"]
+  cors_origins: ["http://localhost:3000", "http://localhost:3001"]
+
+# Storage
+storage:
+  upload_dir: "uploads"
+  processed_dir: "processed"
+  cache_dir: "cache"
+  models_dir: "models"
+
+# Performance
+performance:
+  batch_size: 4
+  num_workers: 4
+  use_gpu: true
+  gpu_device: 0
+
