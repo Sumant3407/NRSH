@@ -135,7 +135,7 @@ Edit `config/config.yaml` to customize:
 2. Click "Run Analysis"
 3. View results in dashboard:
    - Map visualization with detected issues
-   - Before-after comparison frames
+   - Before-and-after comparison frames
    - Severity scores and trends
 
 ### Generate Reports
@@ -189,7 +189,7 @@ Once the server is running, visit:
 
 This is a hackathon project. For improvements:
 1. Fork the repository
-2. Create feature branch
+2. Create a feature branch
 3. Submit pull request
 
 ## 📄 License
@@ -199,12 +199,3 @@ MIT License - Hackathon Project
 ## 👥 Team
 
 National Road Safety Hackathon 2025 Team
-
----
-
-**Built with ❤️ for Road Safety**
-
-## 🎥 Sample Videos
-
-You can download sample videos for testing from the [Road Safety Infrastructure Analysis System GitHub repository](https://github.com/your-repo/road-safety-videos).
-
