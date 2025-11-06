@@ -198,4 +198,4 @@ MIT License - Hackathon Project
 
 ## 👥 Team
 
-National Road Safety Hackathon 2025 Team
+National Road Safety Hackathon 2025 Team: CHIKKUZ
