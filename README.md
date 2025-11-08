@@ -198,8 +198,10 @@ MIT License - Hackathon Project
 
 ## 👥 Team
 
-National Road Safety Hackathon 2025 Team:
-Team Name: CHIKKUZ
-Members:
+National Road Safety Hackathon 2025 Team:<br>
+
+Team Name: CHIKKUZ<br>
+
+Members:<br>
 1. Ananya Rai
 2. Sumant Kumar Giri
