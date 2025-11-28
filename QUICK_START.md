@@ -57,7 +57,45 @@ New-Item -ItemType Directory -Force -Path uploads, processed, cache, reports, mo
 python scripts/download_models.py
 ```
 
-### Step 5: Install Frontend Dependencies
+### Step 5: Setup Supabase Database (Optional but Recommended)
+
+The system works with file-based storage by default, but Supabase provides better scalability and features.
+
+**Quick Setup:**
+
+1. **Create Supabase Project:**
+   - Go to https://app.supabase.com
+   - Click "New Project"
+   - Fill in project details and wait for creation
+
+2. **Get API Credentials:**
+   - In Supabase dashboard: **Settings** → **API**
+   - Copy **Project URL** (SUPABASE_URL)
+   - Copy **anon public key** (SUPABASE_KEY)
+
+3. **Create Database Tables:**
+   - In Supabase dashboard: **SQL Editor** → **New Query**
+   - Copy contents of `database/schema.sql`
+   - Paste and click **Run**
+
+4. **Configure Environment:**
+   ```powershell
+   # Create .env file in project root
+   # Add your Supabase credentials:
+   SUPABASE_URL=https://your-project-id.supabase.co
+   SUPABASE_KEY=your-anon-key-here
+   ```
+
+5. **Test Connection:**
+   ```powershell
+   python scripts/test_database.py
+   ```
+
+**Note:** If you skip this step, the system will use file-based storage automatically. You can set up Supabase later without any code changes.
+
+For detailed instructions, see [SUPABASE_SETUP.md](SUPABASE_SETUP.md).
+
+### Step 6: Install Frontend Dependencies
 
 Open a **new PowerShell window** (keep the backend one open):
 
@@ -145,6 +183,17 @@ You can test the API directly:
 2. **Test Health Endpoint:** http://localhost:8000/health
 3. **Root Endpoint:** http://localhost:8000/
 
+## Testing Database Connection (If Supabase is Configured)
+
+```powershell
+# Test Supabase connection
+python scripts/test_database.py
+```
+
+You should see:
+- ✅ Database connection successful (if configured correctly)
+- ⚠️ Database not configured (system will use file-based storage)
+
 ## Troubleshooting
 
 ### Backend Issues
@@ -168,6 +217,11 @@ taskkill /PID <PID_NUMBER> /F
 **Problem: Config file not found**
 - Make sure `config/config.yaml` exists
 - Check you're running from project root
+
+**Problem: Database connection fails**
+- Check `.env` file has correct `SUPABASE_URL` and `SUPABASE_KEY`
+- Verify tables exist in Supabase (run `database/schema.sql`)
+- System will automatically use file-based storage as fallback
 
 ### Frontend Issues
 
@@ -212,10 +266,15 @@ deactivate
 ## Next Steps
 
 1. ✅ Backend and frontend are running
-2. Open http://localhost:3000 in your browser
-3. Upload test videos (base and present)
-4. Run analysis
-5. View results in the dashboard
+2. ✅ (Optional) Supabase database configured
+3. Open http://localhost:3000 in your browser
+4. Upload test videos (base and present)
+5. Run analysis
+6. View results in the dashboard
+
+**Storage Options:**
+- **With Supabase:** All data stored in database, scalable and efficient
+- **Without Supabase:** Data stored in local files (uploads/, processed/), works out-of-the-box
 
 ## Full Command Sequence (Copy-Paste)
 
@@ -226,6 +285,10 @@ python -m venv venv
 .\venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 python scripts/download_models.py
+
+# Optional: Test database connection (if Supabase is configured)
+python scripts/test_database.py
+
 uvicorn backend.main:app --reload --port 8000
 
 # Terminal 2: Frontend (in new PowerShell window)
@@ -235,6 +298,8 @@ npm run dev
 ```
 
 Then open http://localhost:3000 in your browser!
+
+**Note:** If you haven't set up Supabase, the system will automatically use file-based storage. No additional configuration needed!
 
 ## Download sample videos (optional)
 
