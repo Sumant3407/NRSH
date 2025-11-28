@@ -1,0 +1,3 @@
+# Road Safety Infrastructure Analysis Project
+# This file makes the root directory a Python package
+
