@@ -1,63 +1,83 @@
-'use client'
+'use client';
 
-import { useState, useEffect } from 'react'
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet'
-import 'leaflet/dist/leaflet.css'
-import L from 'leaflet'
-import axios from 'axios'
+import { useState, useEffect } from 'react';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
+import axios from 'axios';
+import PropTypes from 'prop-types';
 
-// Fix for default marker icons in Next.js
-delete L.Icon.Default.prototype._getIconUrl
+delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
-  iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+  iconRetinaUrl:
+    'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
   iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
   shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-})
+});
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+const AXIOS_TIMEOUT = parseInt(
+  process.env.NEXT_PUBLIC_AXIOS_TIMEOUT_MS || '15000',
+  10,
+);
 
+const DEFAULT_MAP_LAT = parseFloat(
+  process.env.NEXT_PUBLIC_MAP_DEFAULT_LAT || '12.9716',
+);
+const DEFAULT_MAP_LON = parseFloat(
+  process.env.NEXT_PUBLIC_MAP_DEFAULT_LON || '77.5946',
+);
+
+// Function: MapUpdater
 function MapUpdater({ bounds }) {
-  const map = useMap()
-  
+  const map = useMap();
+
   useEffect(() => {
     if (bounds) {
       map.fitBounds([
         [bounds.south, bounds.west],
-        [bounds.north, bounds.east]
-      ])
+        [bounds.north, bounds.east],
+      ]);
     }
-  }, [bounds, map])
-  
-  return null
+  }, [bounds, map]);
+
+  return null;
 }
 
-export default function MapVisualization({ analysisId }) {
-  const [mapData, setMapData] = useState(null)
-  const [loading, setLoading] = useState(true)
+export default // Function: MapVisualization
+// Function: MapVisualization
+function MapVisualization({ analysisId }) {
+  const [mapData, setMapData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (analysisId) {
-      fetchMapData()
+      setLoading(true);
+      setMapData(null);
+      fetchMapData();
     }
-  }, [analysisId])
+  }, [analysisId]);
 
   const fetchMapData = async () => {
     try {
-      const response = await axios.get(`${API_URL}/api/v1/dashboard/map-data/${analysisId}`)
-      setMapData(response.data)
+      const response = await axios.get(
+        `${API_URL}/api/v1/dashboard/map-data/${analysisId}`,
+        { timeout: AXIOS_TIMEOUT },
+      );
+      setMapData(response.data);
     } catch (error) {
-      console.error('Error fetching map data:', error)
+      console.error('Error fetching map data:', error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   if (loading) {
     return (
       <div className="bg-white rounded-lg shadow p-8 text-center">
         <p>Loading map data...</p>
       </div>
-    )
+    );
   }
 
   if (!mapData || !mapData.markers || mapData.markers.length === 0) {
@@ -65,24 +85,27 @@ export default function MapVisualization({ analysisId }) {
       <div className="bg-white rounded-lg shadow p-8 text-center text-gray-500">
         <p>No geospatial data available</p>
       </div>
-    )
+    );
   }
 
-  // Default center if no bounds
-  const center = mapData.bounds 
-    ? [(mapData.bounds.north + mapData.bounds.south) / 2, (mapData.bounds.east + mapData.bounds.west) / 2]
-    : [12.9716, 77.5946] // Default to Bangalore
+  const center = mapData.bounds
+    ? [
+        (mapData.bounds.north + mapData.bounds.south) / 2,
+        (mapData.bounds.east + mapData.bounds.west) / 2,
+      ]
+    : [DEFAULT_MAP_LAT, DEFAULT_MAP_LON];
 
+  // Function: getMarkerColor
   const getMarkerColor = (severity) => {
     switch (severity) {
       case 'severe':
-        return '#dc2626'
+        return '#dc2626';
       case 'moderate':
-        return '#f59e0b'
+        return '#f59e0b';
       default:
-        return '#fbbf24'
+        return '#fbbf24';
     }
-  }
+  };
 
   return (
     <div className="bg-white rounded-lg shadow p-6">
@@ -110,8 +133,10 @@ export default function MapVisualization({ analysisId }) {
             >
               <Popup>
                 <div>
-                  <strong>{marker.element_type.replace(/_/g, ' ')}</strong><br />
-                  Severity: {marker.severity}<br />
+                  <strong>{marker.element_type.replace(/_/g, ' ')}</strong>
+                  <br />
+                  Severity: {marker.severity}
+                  <br />
                   Confidence: {(marker.confidence * 100).toFixed(1)}%
                 </div>
               </Popup>
@@ -120,5 +145,13 @@ export default function MapVisualization({ analysisId }) {
         </MapContainer>
       </div>
     </div>
-  )
+  );
 }
+
+MapVisualization.propTypes = {
+  analysisId: PropTypes.string,
+};
+
+MapVisualization.defaultProps = {
+  analysisId: null,
+};

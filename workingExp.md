@@ -11,6 +11,7 @@ The **Road Safety Infrastructure Analysis System** is an AI-powered platform des
 The backend is built using FastAPI and follows a modular service-oriented architecture:
 
 #### Core Components:
+
 - **API Routes** (`backend/api/routes/`):
   - `video.py`: Handles video upload, retrieval, and management
   - `analysis.py`: Manages analysis job creation and status tracking
@@ -25,6 +26,7 @@ The backend is built using FastAPI and follows a modular service-oriented archit
   - `config_manager.py`: Centralized configuration management
 
 #### Main Application (`backend/main.py`):
+
 - FastAPI application with CORS middleware
 - Modular router inclusion for clean API structure
 - Health check endpoints
@@ -33,6 +35,7 @@ The backend is built using FastAPI and follows a modular service-oriented archit
 ### 2. **AI/ML Pipeline**
 
 #### Detection System (`ai_models/detection/detector.py`):
+
 - **YOLOv8 Model**: Uses Ultralytics YOLOv8 for object detection
 - **Detection Elements**:
   - Pavement cracks and potholes
@@ -45,6 +48,7 @@ The backend is built using FastAPI and follows a modular service-oriented archit
 - **Confidence Thresholding**: Configurable confidence and IoU thresholds
 
 #### Change Detection (`ai_models/change_detection/change_detector.py`):
+
 - Compares detections between base and present videos
 - Identifies temporal changes and deterioration
 - Calculates severity scores for detected issues
@@ -52,17 +56,20 @@ The backend is built using FastAPI and follows a modular service-oriented archit
 ### 3. **Data Processing Pipeline**
 
 #### Frame Extraction (`data_processing/frame_extraction.py`):
+
 - Extracts frames from video at configurable FPS
 - Handles multiple video formats (MP4, AVI, MOV, MKV)
 - Optimizes frame extraction for processing efficiency
 
 #### Frame Alignment (`data_processing/alignment.py`):
+
 - Aligns frames from base and present videos
 - GPS-based alignment using metadata
 - Temporal alignment for synchronized comparison
 - Handles coordinate system transformations
 
 #### Preprocessing (`data_processing/preprocessing.py`):
+
 - Frame resizing and normalization
 - Video stabilization
 - Quality enhancement for better detection accuracy
@@ -107,11 +114,13 @@ The analysis process follows these steps:
 ### 5. **Frontend Architecture (Next.js/React)**
 
 #### Components:
+
 - `VideoUpload.js`: Drag-and-drop video upload interface
 - `AnalysisDashboard.js`: Real-time analysis status and results display
 - `MapVisualization.js`: Interactive map with GPS-tagged detections
 
 #### Features:
+
 - Real-time progress tracking
 - Interactive map visualization
 - Before-after frame comparison
@@ -151,13 +160,13 @@ The system uses YAML-based configuration (`config/config.yaml`):
 
 ### Data Storage
 
-**Current Implementation** (File-based):
+- *Current Implementation** (File-based):
 - Videos stored in `uploads/` directory
 - Metadata stored in JSON files
 - Analysis results in `processed/` directory
 - Status tracking via JSON files
 
-**Supabase Integration** (New):
+- *Supabase Integration** (New):
 - Structured database for videos, analyses, and results
 - Real-time subscriptions for status updates
 - Efficient querying and filtering
@@ -166,12 +175,14 @@ The system uses YAML-based configuration (`config/config.yaml`):
 ### API Endpoints
 
 #### Video Management:
+
 - `POST /api/v1/video/upload`: Upload video files
 - `GET /api/v1/video/{video_id}`: Get video information
 - `GET /api/v1/video/list`: List all videos
 - `DELETE /api/v1/video/{video_id}`: Delete video
 
 #### Analysis:
+
 - `POST /api/v1/analysis/run`: Start analysis job
 - `GET /api/v1/analysis/{analysis_id}/status`: Get analysis status
 - `GET /api/v1/analysis/{analysis_id}/results`: Get analysis results
@@ -179,47 +190,59 @@ The system uses YAML-based configuration (`config/config.yaml`):
 - `GET /api/v1/analysis/{analysis_id}/heatmap`: Get heatmap data
 
 #### Dashboard:
+
 - `GET /api/v1/dashboard/summary`: Get dashboard summary
 - `GET /api/v1/dashboard/stats`: Get statistics
 
 #### Reports:
+
 - `POST /api/v1/reports/generate`: Generate PDF report
 - `GET /api/v1/reports/{report_id}`: Download report
 
 ## Key Features & Innovations
 
 ### 1. **Temporal Comparison**
+
 - AI-driven before-after analysis
 - Identifies deterioration over time
 - Quantifies changes with severity scores
 
 ### 2. **Multi-Element Detection**
+
 - Simultaneous detection of 6+ infrastructure elements
 - Custom-trained or adapted models for road infrastructure
 - Configurable detection thresholds
 
 ### 3. **Geospatial Intelligence**
+
 - GPS-tagged detections
 - Map-based visualization
 - Road segment-based aggregation
 - Spatial querying capabilities
 
 ### 4. **Automated Scoring**
+
 - Severity-based issue prioritization
 - Weighted scoring system
 - Configurable severity thresholds
 
 ### 5. **Real-time Processing**
+
 - Background task processing
 - Progress tracking via status updates
 - Asynchronous API design
 - Optimized for performance
 
 ### 6. **Scalable Architecture**
+
 - Modular service design
 - Easy to extend with new detection types
 - Configurable processing parameters
 - Database-backed for production scale
+
+### 7. **Single-Media Detection**
+
+- Optional mode to run detection on a single image or video (no comparison); enable via the uploader toggle in the UI. Results are returned under a generated analysis ID and surfaced in the dashboard.
 
 ## Performance Optimizations
 
@@ -232,6 +255,7 @@ The system uses YAML-based configuration (`config/config.yaml`):
 ## Technology Stack
 
 ### Backend:
+
 - **FastAPI**: Modern, fast web framework
 - **Python 3.9+**: Core language
 - **YOLOv8 (Ultralytics)**: Object detection
@@ -239,16 +263,19 @@ The system uses YAML-based configuration (`config/config.yaml`):
 - **PyTorch**: Deep learning framework
 
 ### Frontend:
+
 - **Next.js**: React framework
 - **React**: UI library
 - **Tailwind CSS**: Styling
 - **Map Libraries**: Geospatial visualization
 
 ### Database:
+
 - **Supabase**: PostgreSQL database with real-time capabilities
 - **SQLAlchemy**: ORM for database operations
 
 ### Infrastructure:
+
 - **Docker** (optional): Containerization
 - **Cloud Storage**: Scalable file storage
 - **CDN**: Content delivery for static assets
@@ -290,28 +317,31 @@ The system uses YAML-based configuration (`config/config.yaml`):
 ## Challenges & Solutions
 
 ### Challenge 1: Frame Alignment
-**Problem**: Aligning frames from different videos with varying GPS data
-**Solution**: Multi-criteria alignment using GPS coordinates, timestamps, and visual features
+
+- *Problem**: Aligning frames from different videos with varying GPS data
+- *Solution**: Multi-criteria alignment using GPS coordinates, timestamps, and visual features
 
 ### Challenge 2: Processing Speed
-**Problem**: Large video files require significant processing time
-**Solution**: Frame sampling, batch processing, GPU acceleration, and background tasks
+
+- *Problem**: Large video files require significant processing time
+- *Solution**: Frame sampling, batch processing, GPU acceleration, and background tasks
 
 ### Challenge 3: Detection Accuracy
-**Problem**: General-purpose models may not detect road-specific elements accurately
-**Solution**: Custom class mapping, fine-tuning, and severity classification heuristics
+
+- *Problem**: General-purpose models may not detect road-specific elements accurately
+- *Solution**: Custom class mapping, fine-tuning, and severity classification heuristics
 
 ### Challenge 4: Scalability
-**Problem**: File-based storage doesn't scale well
-**Solution**: Supabase integration for structured, scalable data storage
+
+- *Problem**: File-based storage doesn't scale well
+- *Solution**: Supabase integration for structured, scalable data storage
 
 ## Conclusion
 
 The Road Safety Infrastructure Analysis System demonstrates a comprehensive approach to automated road infrastructure monitoring. By combining computer vision, deep learning, and geospatial analysis, the system provides actionable insights for road maintenance and safety improvements. The modular architecture ensures maintainability and extensibility for future enhancements.
 
----
+- --
 
-**Team**: CHIKKUZ  
-**Members**: Ananya Rai, Sumant Kumar Giri  
-**Project**: National Road Safety Hackathon 2025
-
+- *Team**: CHIKKUZ
+- *Members**: Ananya Rai, Sumant Kumar Giri
+- *Project**: National Road Safety Hackathon 2025

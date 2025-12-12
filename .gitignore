@@ -12,9 +12,10 @@ pip-log.txt
 pip-delete-this-directory.txt
 
 # Models and Data
-models/*.pt
-models/*.pth
-models/*.onnx
+# Model weights (ignore binary weight files but allow configs like .yaml/.json)
+**/models/**/*.pt
+**/models/**/*.pth
+**/models/**/*.onnx
 uploads/
 processed/
 cache/
@@ -63,4 +64,16 @@ Thumbs.db
 .pytest_cache/
 .coverage
 htmlcov/
+
+# Formatting / lint caches
+.cache/
+.cache/black/
+# Black cache
+.black/
+# Prettier cache
+.prettiercache
+# flake8 cache
+.tox/
+.mypy_cache/
+*.tmp
 

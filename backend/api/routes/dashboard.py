@@ -1,25 +1,22 @@
-"""
-Dashboard data endpoints
-"""
+import sys
+from pathlib import Path
+from typing import Optional
 
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import JSONResponse
-from typing import Optional
-import sys
-from pathlib import Path
 
-# Add project root to Python path
 project_root = Path(__file__).parent.parent.parent.parent
 if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
 
-from backend.services.dashboard_service import DashboardService
 from backend.services.config_manager import ConfigManager
+from backend.services.dashboard_service import DashboardService
+from backend.services.errors import ServiceError
 
 router = APIRouter()
 
-# Initialize services
 from pathlib import Path
+
 project_root = Path(__file__).parent.parent.parent.parent
 config_path = project_root / "config" / "config.yaml"
 config = ConfigManager(config_path)
@@ -44,6 +41,8 @@ async def get_map_data(analysis_id: str):
         return JSONResponse(content=map_data)
     except FileNotFoundError:
         raise HTTPException(status_code=404, detail="Analysis not found")
+    except ServiceError as se:
+        raise HTTPException(status_code=500, detail=se.to_dict())
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -72,4 +71,3 @@ async def get_comparison_frames(analysis_id: str, frame_index: Optional[int] = N
         raise HTTPException(status_code=404, detail="Analysis not found")
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-

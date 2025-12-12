@@ -1,11 +1,7 @@
-"""
-Setup script for Road Safety Infrastructure Analysis
-"""
 
 from setuptools import setup, find_packages
 from pathlib import Path
 
-# Read README
 readme_file = Path(__file__).parent / "README.md"
 long_description = readme_file.read_text() if readme_file.exists() else ""
 
@@ -51,4 +47,3 @@ setup(
         "Programming Language :: Python :: 3.11",
     ],
 )
-

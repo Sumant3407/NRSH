@@ -1,4 +1,5 @@
 # Road Safety Infrastructure Analysis System
+
 ## National Road Safety Hackathon 2025
 
 An AI-powered system for comparative analysis of road infrastructure elements using computer vision and deep learning.
@@ -6,6 +7,7 @@ An AI-powered system for comparative analysis of road infrastructure elements us
 ## 🎯 Features
 
 - **AI-Based Video Analysis**: Compare base vs present road videos to detect deterioration
+- **Single-Media Detection**: Run detection on a single image or video (no comparison) via UI toggle
 - **Multi-Element Detection**: Identify pavement condition, road markings, road studs, signs, roadside furniture, and VRU paths
 - **Geospatial Visualization**: Map-based dashboard with GPS-tagged detections
 - **Automated Reporting**: Generate PDF reports with before-after comparisons
@@ -15,7 +17,7 @@ An AI-powered system for comparative analysis of road infrastructure elements us
 
 ## 🏗️ System Architecture
 
-```
+```text
 ┌─────────────────┐
 │  Input Videos   │ (Base + Present)
 │  + Metadata     │ (GPS, Timestamps)
@@ -45,7 +47,7 @@ An AI-powered system for comparative analysis of road infrastructure elements us
 ## 📁 Project Structure
 
 ```
-RSH/
+NRSH/
 ├── backend/              # FastAPI backend
 │   ├── api/             # API routes
 │   ├── models/          # Database models (Supabase)
@@ -82,31 +84,38 @@ RSH/
 ### Installation
 
 1. **Clone and setup Python environment:**
+
 ```bash
-cd RSH
+cd NRSH
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
 2. **Setup frontend:**
+
 ```bash
 cd frontend
 npm install
 ```
 
 3. **Download AI models:**
+
 ```bash
 python scripts/download_models.py
 ```
 
 4. **Setup Supabase Database (Optional but Recommended):**
+
 ```bash
 # Create .env file with Supabase credentials
+
 # See SUPABASE_SETUP.md for detailed instructions
 
 # Run database schema
+
 # Copy contents of database/schema.sql to Supabase SQL Editor
+
 ```
 
 ### Import System and Module Structure
@@ -123,13 +132,13 @@ Verifying imports
 
 We provide a helper script to verify imports across the codebase:
 
-```
+```bash
 python scripts/verify_imports.py
 ```
 
 If any imports fail, ensure you are running the command from the project root and that all third-party dependencies are installed:
 
-```
+```bash
 pip install -r requirements.txt
 ```
 
@@ -141,23 +150,39 @@ Troubleshooting
 
 See `IMPORT_VERIFICATION_REPORT.md` for a detailed dependency map, identified issues, and recommended fixes.
 
+## SoftwareDocumentCode directory
+
+The repository contains an archival snapshot in `SoftwareDocumentCode/`. This
+directory is a copy of the project tree intended for documentation, review,
+and submission packages. It is not the canonical working tree — active
+development and CI should target the root-level directories such as
+`backend/`, `frontend/`, and `ai_models/`.
+
+For full details about the snapshot contents and guidance on removal, see:
+
+- `SoftwareDocumentCode/README.md`
+
+Contributors should prefer modifying files under the project root (for
+example, `backend/`, `frontend/`) rather than inside `SoftwareDocumentCode/`.
 
 ### Running the Application
 
 1. **Start backend server:**
+
 ```bash
 cd backend
 uvicorn main:app --reload --port 8000
 ```
 
 2. **Start frontend:**
+
 ```bash
 cd frontend
 npm run dev
 ```
 
 3. **Access dashboard:**
-Open http://localhost:3000 in your browser
+Open [http://localhost:3000](http://localhost:3000) in your browser
 
 ## 🔧 Configuration
 
@@ -166,6 +191,45 @@ Edit `config/config.yaml` to customize:
 - Detection thresholds
 - GPS coordinate systems
 - Report templates
+
+### Environment Variables
+
+Runtime configuration is also controlled via environment variables. A
+centralized list and guidance are provided in `.env.example` at the
+repository root. Common variables include `SUPABASE_URL`, `SUPABASE_KEY`,
+`NEXT_PUBLIC_API_URL`, and frontend timeouts/polling variables.
+Copy `.env.example` to `.env` for local development and modify values as
+needed.
+
+## 🛠️ Development & Formatting
+
+We use common formatting tools to keep code consistent across the repository.
+
+Python (backend, AI, data processing)
+
+```bash
+# install formatter tools (once)
+python -m pip install --upgrade pip
+python -m pip install black==23.12.0 isort==5.12.0
+
+# sort imports then format
+python -m isort backend ai_models data_processing scripts --profile black
+python -m black backend ai_models data_processing scripts --line-length 88 --target-version py39
+```
+
+Frontend (React/Next.js)
+
+```bash
+cd frontend
+npm install
+# format all frontend files using Prettier (format script added to package.json)
+npm run format
+# run ESLint
+npm run lint
+```
+
+We recommend adding these to a pre-commit hook (for example using `pre-commit`) to enforce formatting on commit.
+
 
 ## 📊 Usage
 
@@ -228,17 +292,20 @@ Edit `config/config.yaml` to customize:
 ## 💻 Software & Technologies Utilized
 
 ### Programming Languages
+
 - **Python 3.9+**: Backend development, AI/ML processing, data analysis
 - **JavaScript (ES6+)**: Frontend development, React components
 - **SQL**: Database schema and queries (PostgreSQL)
 
 ### Backend Framework & Libraries
+
 - **FastAPI 0.104.1**: Modern, fast web framework for building APIs
 - **Uvicorn**: ASGI server for running FastAPI applications
 - **Pydantic**: Data validation and settings management
 - **Python-multipart**: File upload handling
 
 ### AI/ML & Computer Vision
+
 - **PyTorch 2.1.0**: Deep learning framework
 - **Torchvision 0.16.0**: Computer vision utilities
 - **Ultralytics YOLOv8 8.1.0**: Object detection model
@@ -248,40 +315,47 @@ Edit `config/config.yaml` to customize:
 - **scikit-learn 1.3.2**: Machine learning utilities
 
 ### Data Processing & Analysis
+
 - **Pandas 2.1.3**: Data manipulation and analysis
 - **SciPy 1.11.4**: Scientific computing
 - **imageio 2.31.6**: Image I/O operations
 - **imageio-ffmpeg 0.4.9**: Video processing
 
 ### Geospatial Libraries
+
 - **geopy 2.4.1**: Geocoding and distance calculations
 - **folium 0.15.1**: Interactive map generation
 - **geopandas 0.14.1**: Geospatial data operations
 - **shapely 2.0.2**: Geometric operations
 
 ### Visualization
+
 - **Matplotlib 3.8.2**: Static plotting
 - **Seaborn 0.13.0**: Statistical data visualization
 - **Plotly 5.18.0**: Interactive visualizations
 
 ### Report Generation
+
 - **ReportLab 4.0.7**: PDF generation
 - **FPDF2 2.7.6**: PDF creation library
 - **Jinja2 3.1.2**: Template engine
 
 ### Database & ORM
+
 - **Supabase 2.3.0**: PostgreSQL database with real-time capabilities
 - **PostgREST 0.13.0**: REST API for PostgreSQL
 - **SQLAlchemy 2.0.23**: SQL toolkit and ORM
 - **Alembic 1.12.1**: Database migration tool
 
 ### Frontend Framework & Libraries
+
 - **Next.js 14.2.33**: React framework for production
 - **React 18.2.0**: UI library
 - **React DOM 18.2.0**: React rendering
 - **Axios 1.13.2**: HTTP client for API calls
 
 ### Frontend UI & Visualization
+
 - **Leaflet 1.9.4**: Interactive maps
 - **React-Leaflet 4.2.1**: React components for Leaflet
 - **Recharts 2.10.3**: Chart library for React
@@ -289,22 +363,26 @@ Edit `config/config.yaml` to customize:
 - **Tailwind CSS 3.3.6**: Utility-first CSS framework
 
 ### Frontend Development Tools
+
 - **TypeScript 5.3.3**: Type checking (dev dependency)
 - **ESLint 8.56.0**: Code linting
 - **PostCSS 8.4.32**: CSS processing
 - **Autoprefixer 10.4.16**: CSS vendor prefixing
 
 ### Utilities & Configuration
+
 - **python-dotenv 1.0.0**: Environment variable management
 - **PyYAML 6.0.1**: YAML file parsing
 - **aiofiles 23.2.1**: Async file operations
 - **python-jose**: JWT token handling
 
 ### Testing
+
 - **pytest 7.4.3**: Python testing framework
 - **pytest-asyncio 0.21.1**: Async testing support
 
 ### Development Tools & Platforms
+
 - **Git**: Version control
 - **Node.js 16+**: JavaScript runtime
 - **npm**: Node package manager
@@ -314,10 +392,12 @@ Edit `config/config.yaml` to customize:
 - **CUDA** (Optional): GPU acceleration for AI inference
 
 ### IDEs & Editors
+
 - **VS Code / Cursor**: Code editor
 - **PowerShell**: Command-line interface (Windows)
 
 ### API Documentation
+
 - **Swagger UI**: Interactive API documentation (auto-generated by FastAPI)
 - **ReDoc**: Alternative API documentation
 
@@ -325,8 +405,9 @@ Edit `config/config.yaml` to customize:
 
 The system uses Supabase (PostgreSQL) for data storage. Setup is optional - the system will fall back to file-based storage if Supabase is not configured.
 
-**Quick Setup:**
-1. Create a Supabase project at https://supabase.com
+- *Quick Setup:**
+
+1. Create a Supabase project at [https://supabase.com](https://supabase.com)
 2. Get your `SUPABASE_URL` and `SUPABASE_KEY` from project settings
 3. Create `.env` file with credentials
 4. Run `database/schema.sql` in Supabase SQL Editor
@@ -337,12 +418,14 @@ For detailed instructions, see [SUPABASE_SETUP.md](SUPABASE_SETUP.md) and [datab
 ## 📝 API Documentation
 
 Once the server is running, visit:
-- Swagger UI: http://localhost:8000/docs
-- ReDoc: http://localhost:8000/redoc
+
+- Swagger UI: [http://localhost:8000/docs](http://localhost:8000/docs)
+- ReDoc: [http://localhost:8000/redoc](http://localhost:8000/redoc)
 
 ## 🤝 Contributing
 
 This is a hackathon project. For improvements:
+
 1. Fork the repository
 2. Create feature branch
 3. Submit pull request
@@ -355,9 +438,10 @@ MIT License - Hackathon Project
 
 National Road Safety Hackathon 2025 Team: CHIKKUZ
 Members:
+
 1. Ananya Rai
 2. Sumant Kumar Giri
 
----
+- --
 
-**Built with ❤️ for Road Safety**
+Built with ❤️ for Road Safety

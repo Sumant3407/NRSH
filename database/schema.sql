@@ -43,11 +43,13 @@ CREATE TABLE IF NOT EXISTS detections (
         'roadside_furniture_damage',
         'vru_path_obstruction'
     )),
-    bbox REAL[] NOT NULL CHECK (array_length(bbox, 1) = 4), -- [x1, y1, x2, y2]
+    bbox REAL[] NOT NULL CHECK (bbox IS NOT NULL AND array_length(bbox, 1) = 4), -- [x1, y1, x2, y2]
     confidence REAL NOT NULL CHECK (confidence >= 0.0 AND confidence <= 1.0),
     severity VARCHAR(20) NOT NULL CHECK (severity IN ('minor', 'moderate', 'severe')),
     severity_score REAL NOT NULL DEFAULT 0.0 CHECK (severity_score >= 0.0 AND severity_score <= 10.0),
-    gps_coords REAL[], -- [lat, lon]
+    gps_coords REAL[], -- [lat, lon] - stored as array for compatibility
+    gps_lat REAL, -- Latitude for indexing and queries
+    gps_lon REAL, -- Longitude for indexing and queries
     frame_number INTEGER,
     created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
 );
@@ -66,7 +68,7 @@ CREATE TABLE IF NOT EXISTS reports (
 CREATE TABLE IF NOT EXISTS road_segments (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     name VARCHAR(255),
-    gps_coords REAL[][] NOT NULL, -- Polygon coordinates [[lat, lon], ...]
+    gps_coords JSONB NOT NULL, -- Polygon coordinates stored as JSONB: [[lat, lon], ...] for better querying
     created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
 );
@@ -83,10 +85,14 @@ CREATE INDEX IF NOT EXISTS idx_analyses_created_at ON analyses(created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_detections_analysis_id ON detections(analysis_id);
 CREATE INDEX IF NOT EXISTS idx_detections_element_type ON detections(element_type);
 CREATE INDEX IF NOT EXISTS idx_detections_severity ON detections(severity);
-CREATE INDEX IF NOT EXISTS idx_detections_gps_coords ON detections USING GIST (gps_coords);
+CREATE INDEX IF NOT EXISTS idx_detections_gps_lat ON detections(gps_lat) WHERE gps_lat IS NOT NULL;
+CREATE INDEX IF NOT EXISTS idx_detections_gps_lon ON detections(gps_lon) WHERE gps_lon IS NOT NULL;
+CREATE INDEX IF NOT EXISTS idx_detections_gps_coords_composite ON detections(gps_lat, gps_lon) WHERE gps_lat IS NOT NULL AND gps_lon IS NOT NULL;
 
 CREATE INDEX IF NOT EXISTS idx_reports_analysis_id ON reports(analysis_id);
 CREATE INDEX IF NOT EXISTS idx_reports_generated_at ON reports(generated_at DESC);
+
+CREATE INDEX IF NOT EXISTS idx_road_segments_gps_coords ON road_segments USING GIN (gps_coords);
 
 -- Create updated_at trigger function
 CREATE OR REPLACE FUNCTION update_updated_at_column()
@@ -97,15 +103,38 @@ BEGIN
 END;
 $$ language 'plpgsql';
 
--- Add triggers for updated_at
+-- Function to sync gps_coords array to gps_lat and gps_lon columns
+CREATE OR REPLACE FUNCTION sync_gps_coords()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.gps_coords IS NOT NULL AND array_length(NEW.gps_coords, 1) >= 2 THEN
+        NEW.gps_lat := NEW.gps_coords[1];
+        NEW.gps_lon := NEW.gps_coords[2];
+    ELSE
+        NEW.gps_lat := NULL;
+        NEW.gps_lon := NULL;
+    END IF;
+    RETURN NEW;
+END;
+$$ language 'plpgsql';
+
+-- Add triggers for updated_at (using DROP IF EXISTS to avoid errors on re-runs)
+DROP TRIGGER IF EXISTS update_videos_updated_at ON videos;
 CREATE TRIGGER update_videos_updated_at BEFORE UPDATE ON videos
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
+DROP TRIGGER IF EXISTS update_analyses_updated_at ON analyses;
 CREATE TRIGGER update_analyses_updated_at BEFORE UPDATE ON analyses
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
+DROP TRIGGER IF EXISTS update_road_segments_updated_at ON road_segments;
 CREATE TRIGGER update_road_segments_updated_at BEFORE UPDATE ON road_segments
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- Trigger to sync gps_coords array to separate lat/lon columns for indexing
+DROP TRIGGER IF EXISTS sync_detections_gps_coords ON detections;
+CREATE TRIGGER sync_detections_gps_coords BEFORE INSERT OR UPDATE ON detections
+    FOR EACH ROW EXECUTE FUNCTION sync_gps_coords();
 
 -- Enable Row Level Security (RLS) - Optional, configure based on your needs
 -- ALTER TABLE videos ENABLE ROW LEVEL SECURITY;

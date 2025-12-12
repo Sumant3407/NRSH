@@ -1,2 +1,0 @@
-# Detection models package
-

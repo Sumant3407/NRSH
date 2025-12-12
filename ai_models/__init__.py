@@ -1,2 +1,0 @@
-# AI Models package
-

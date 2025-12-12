@@ -1,0 +1,10 @@
+[tool.black]
+line-length = 88
+target-version = ['py39']
+include = '\.pyi?$'
+exclude = '''
+/(\.git|\.hg|\.mypy_cache|\.tox|\.venv|venv|env|\.eggs|build|dist)/
+'''
+
+[tool.isort]
+profile = "black"

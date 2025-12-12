@@ -48,6 +48,10 @@ This guide explains how to set up the Supabase database for the Road Safety Infr
    SUPABASE_KEY=your-anon-key-here
    ```
 
+For a full list of environment variables used by the project (backend and
+frontend) including defaults and consumers, see the central environment
+documentation: `.env.example` at the repository root.
+
 ### 5. Install Python Dependencies
 
 Make sure you have the Supabase Python client installed:
@@ -73,6 +77,7 @@ else:
 The database consists of 5 main tables:
 
 ### 1. `videos`
+
 Stores uploaded video files and metadata
 - `id`: Unique identifier (UUID)
 - `filename`: Original filename
@@ -83,6 +88,7 @@ Stores uploaded video files and metadata
 - `upload_date`: Upload timestamp
 
 ### 2. `analyses`
+
 Stores analysis jobs and their status
 - `id`: Unique identifier (UUID)
 - `base_video_id`: Reference to base video
@@ -93,6 +99,7 @@ Stores analysis jobs and their status
 - `summary`: Analysis summary (JSONB)
 
 ### 3. `detections`
+
 Stores detected road infrastructure issues
 - `id`: Unique identifier (UUID)
 - `analysis_id`: Reference to analysis
@@ -105,6 +112,7 @@ Stores detected road infrastructure issues
 - `frame_number`: Frame number in video
 
 ### 4. `reports`
+
 Stores generated PDF reports
 - `id`: Unique identifier (UUID)
 - `analysis_id`: Reference to analysis
@@ -113,11 +121,16 @@ Stores generated PDF reports
 - `generated_at`: Generation timestamp
 
 ### 5. `road_segments`
+
 Stores road segment definitions
 - `id`: Unique identifier (UUID)
 - `name`: Segment name
 - `gps_coords`: Polygon coordinates [[lat, lon], ...]
 - `created_at`, `updated_at`: Timestamps
+
+## Feature note: Single-media detection
+
+- The new `/api/v1/analysis/detect` endpoint stores results under an analysis ID even for single-image/video runs; schema remains unchanged because it reuses existing `analyses` and `detections` tables.
 
 ## Indexes
 
@@ -175,4 +188,3 @@ For issues:
 - Check Supabase documentation: https://supabase.com/docs
 - Review error messages in application logs
 - Check Supabase project logs in dashboard
-

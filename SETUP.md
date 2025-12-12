@@ -58,6 +58,7 @@ npm install
 ```bash
 cp ../.env.example .env.local
 # Edit .env.local if needed
+
 ```
 
 4. **Start development server:**
@@ -66,6 +67,10 @@ npm run dev
 ```
 
 The frontend will be available at `http://localhost:3000`
+
+## Single-media detection (optional)
+
+- In the web UI uploader, enable “Single-media detection” to run detection on one image or video without needing a base/present pair. Results appear in the dashboard under a generated analysis ID.
 
 ## Running the Full Application
 
