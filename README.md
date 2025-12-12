@@ -245,7 +245,7 @@ We recommend adding these to a pre-commit hook (for example using `pre-commit`) 
 2. Click "Run Analysis"
 3. View results in dashboard:
    - Map visualization with detected issues
-   - Before-after comparison frames
+   - Before-and-after comparison frames
    - Severity scores and trends
 
 ### Generate Reports
@@ -427,7 +427,7 @@ Once the server is running, visit:
 This is a hackathon project. For improvements:
 
 1. Fork the repository
-2. Create feature branch
+2. Create a feature branch
 3. Submit pull request
 
 ## 📄 License
@@ -436,12 +436,8 @@ MIT License - Hackathon Project
 
 ## 👥 Team
 
-National Road Safety Hackathon 2025 Team: CHIKKUZ
-Members:
+National Road Safety Hackathon 2025 — Team: CHIKKUZ
 
+Members:
 1. Ananya Rai
 2. Sumant Kumar Giri
-
-- --
-
-Built with ❤️ for Road Safety
