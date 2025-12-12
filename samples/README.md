@@ -10,6 +10,7 @@ From project root:
 
 ```bash
 # Windows PowerShell
+
 python scripts/download_sample_videos.py
 ```
 
@@ -24,3 +25,7 @@ This will create:
 - Upload `base_road_sample.mp4` as Base
 - Upload `present_road_sample.mp4` as Present
 - Optionally paste the contents of `base_gps.json` / `present_gps.json` into the GPS field (if you extend the UI to accept it), or rely on temporal alignment.
+
+### Single-media detection
+
+- To test detection without comparison, upload a single image or video and check “Single-media detection” in the uploader. Results will appear in the dashboard under a generated analysis ID.

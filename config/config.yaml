@@ -87,13 +87,15 @@ reporting:
   include_confidence_scores: true
   include_heatmaps: true
   max_issues_per_page: 20
+  max_reports_per_analysis: 5
 
 # API Configuration
 api:
   host: "0.0.0.0"
   port: 8000
   max_upload_size: 500  # MB
-  allowed_extensions: [".mp4", ".avi", ".mov", ".mkv"]
+  # Supported upload types (videos and images)
+  allowed_extensions: [".mp4", ".avi", ".mov", ".mkv", ".jpg", ".jpeg", ".png", ".bmp", ".tif", ".tiff"]
   cors_origins: ["http://localhost:3000", "http://localhost:3001"]
 
 # Storage

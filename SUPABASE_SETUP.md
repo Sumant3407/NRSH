@@ -35,10 +35,12 @@ Create a `.env` file in the project root:
 
 ```bash
 # Supabase Configuration
+
 SUPABASE_URL=https://your-project-id.supabase.co
 SUPABASE_KEY=your-anon-key-here
 
 # Optional
+
 API_HOST=0.0.0.0
 API_PORT=8000
 ```
@@ -67,23 +69,23 @@ See `database/schema.sql` for full schema details.
 
 ## Features
 
-✅ **Automatic Fallback**: If Supabase is not configured, the system uses file-based storage  
-✅ **Real-time Updates**: Status updates are stored in database  
-✅ **Efficient Queries**: Indexed tables for fast lookups  
-✅ **Scalable**: Handles large volumes of data  
+✅ **Automatic Fallback**: If Supabase is not configured, the system uses file-based storage
+✅ **Real-time Updates**: Status updates are stored in database
+✅ **Efficient Queries**: Indexed tables for fast lookups
+✅ **Scalable**: Handles large volumes of data
 
 ## Troubleshooting
 
-**Connection Failed?**
+- *Connection Failed?**
 - Check `SUPABASE_URL` and `SUPABASE_KEY` in `.env`
 - Verify tables exist in Supabase dashboard
 - Check network/firewall settings
 
-**Tables Not Found?**
+- *Tables Not Found?**
 - Run `database/schema.sql` in SQL Editor
 - Check for errors in SQL execution
 
-**Data Not Saving?**
+- *Data Not Saving?**
 - Check Supabase logs in dashboard
 - Verify RLS policies if enabled
 - Check application logs for errors
@@ -96,4 +98,3 @@ See `database/schema.sql` for full schema details.
 4. Monitor usage in Supabase dashboard
 
 For more details, see `database/README.md`.
-

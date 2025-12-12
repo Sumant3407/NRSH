@@ -1,35 +1,32 @@
-"""
-Video upload and management endpoints
-"""
-
-from fastapi import APIRouter, UploadFile, File, HTTPException, BackgroundTasks
-from fastapi.responses import JSONResponse
-from pydantic import BaseModel
-from typing import Optional
 import os
 import sys
-from pathlib import Path
 import uuid
 from datetime import datetime
+from pathlib import Path
+from typing import Optional
 
-# Add project root to Python path
+from fastapi import APIRouter, BackgroundTasks, File, HTTPException, UploadFile
+from fastapi.responses import JSONResponse
+from pydantic import BaseModel
+
 project_root = Path(__file__).parent.parent.parent.parent
 if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
 
-from backend.services.video_service import VideoService
 from backend.services.config_manager import ConfigManager
+from backend.services.video_service import VideoService
 
 router = APIRouter()
 
-# Initialize services
 from pathlib import Path
+
 project_root = Path(__file__).parent.parent.parent.parent
 config_path = project_root / "config" / "config.yaml"
 config = ConfigManager(config_path)
 video_service = VideoService(config)
 
 
+# Class: VideoUploadResponse
 class VideoUploadResponse(BaseModel):
     video_id: str
     filename: str
@@ -41,49 +38,56 @@ class VideoUploadResponse(BaseModel):
 async def upload_video(
     file: UploadFile = File(...),
     video_type: str = "present",  # "base" or "present"
-    gps_data: Optional[str] = None
+    gps_data: Optional[str] = None,
 ):
     """
-    Upload a video file for analysis
-    
-    - **file**: Video file (mp4, avi, mov, mkv)
-    - **video_type**: Type of video - "base" (reference) or "present" (current)
+    Upload a media file (video or image) for analysis
+
+    - **file**: Video or image file (see allowed extensions)
+    - **video_type**: "base" (reference) or "present" (current)
     - **gps_data**: Optional GPS metadata (JSON string)
     """
-    # Validate file extension
-    allowed_exts = config.get("api.allowed_extensions", [".mp4", ".avi", ".mov", ".mkv"])
+    allowed_exts = config.get(
+        "api.allowed_extensions",
+        [
+            ".mp4",
+            ".avi",
+            ".mov",
+            ".mkv",
+            ".jpg",
+            ".jpeg",
+            ".png",
+            ".bmp",
+            ".tif",
+            ".tiff",
+        ],
+    )
     file_ext = Path(file.filename).suffix.lower()
-    
+
     if file_ext not in allowed_exts:
         raise HTTPException(
             status_code=400,
-            detail=f"Invalid file type. Allowed: {', '.join(allowed_exts)}"
+            detail=f"Invalid file type. Allowed: {', '.join(allowed_exts)}",
         )
-    
-    # Validate video type
+
     if video_type not in ["base", "present"]:
         raise HTTPException(
-            status_code=400,
-            detail="video_type must be 'base' or 'present'"
+            status_code=400, detail="video_type must be 'base' or 'present'"
         )
-    
+
     try:
-        # Save video file
         video_id = str(uuid.uuid4())
         result = await video_service.save_video(
-            file=file,
-            video_id=video_id,
-            video_type=video_type,
-            gps_data=gps_data
+            file=file, video_id=video_id, video_type=video_type, gps_data=gps_data
         )
-        
+
         return VideoUploadResponse(
             video_id=video_id,
             filename=file.filename,
             status="success",
-            message="Video uploaded successfully"
+            message="Media uploaded successfully",
         )
-    
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -120,4 +124,3 @@ async def list_videos(video_type: Optional[str] = None):
         return {"videos": videos, "count": len(videos)}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-

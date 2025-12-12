@@ -1,36 +1,41 @@
-"""
-Supabase database models and schemas
-"""
-
-from typing import Optional, Dict, List
 from datetime import datetime
-from pydantic import BaseModel, Field
 from enum import Enum
+from typing import Dict, List, Optional
+
+from pydantic import BaseModel, Field
 
 
+# Class: VideoType
 class VideoType(str, Enum):
     """Video type enumeration"""
+
     BASE = "base"
     PRESENT = "present"
 
 
+# Class: AnalysisStatus
 class AnalysisStatus(str, Enum):
     """Analysis status enumeration"""
+
     PENDING = "pending"
     PROCESSING = "processing"
     COMPLETED = "completed"
     FAILED = "failed"
 
 
+# Class: Severity
 class Severity(str, Enum):
     """Severity level enumeration"""
+
     MINOR = "minor"
     MODERATE = "moderate"
     SEVERE = "severe"
 
 
+# Class: ElementType
 class ElementType(str, Enum):
     """Road infrastructure element types"""
+
     PAVEMENT_CRACK = "pavement_crack"
     FADED_MARKING = "faded_marking"
     MISSING_STUD = "missing_stud"
@@ -39,10 +44,10 @@ class ElementType(str, Enum):
     VRU_PATH_OBSTRUCTION = "vru_path_obstruction"
 
 
-# Pydantic models for API and database operations
-
+# Class: VideoModel
 class VideoModel(BaseModel):
     """Video model"""
+
     id: str
     filename: str
     video_type: VideoType
@@ -53,12 +58,15 @@ class VideoModel(BaseModel):
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
 
+    # Class: Config
     class Config:
         from_attributes = True
 
 
+# Class: AnalysisModel
 class AnalysisModel(BaseModel):
     """Analysis model"""
+
     id: str
     base_video_id: str
     present_video_id: str
@@ -70,12 +78,15 @@ class AnalysisModel(BaseModel):
     updated_at: Optional[datetime] = None
     completed_at: Optional[datetime] = None
 
+    # Class: Config
     class Config:
         from_attributes = True
 
 
+# Class: DetectionModel
 class DetectionModel(BaseModel):
     """Detection model"""
+
     id: str
     analysis_id: str
     element_type: ElementType
@@ -87,12 +98,15 @@ class DetectionModel(BaseModel):
     frame_number: Optional[int] = None
     created_at: Optional[datetime] = None
 
+    # Class: Config
     class Config:
         from_attributes = True
 
 
+# Class: ReportModel
 class ReportModel(BaseModel):
     """Report model"""
+
     id: str
     analysis_id: str
     file_path: str
@@ -100,28 +114,30 @@ class ReportModel(BaseModel):
     generated_at: datetime
     created_at: Optional[datetime] = None
 
+    # Class: Config
     class Config:
         from_attributes = True
 
 
+# Class: RoadSegmentModel
 class RoadSegmentModel(BaseModel):
     """Road segment model"""
+
     id: str
     name: Optional[str] = None
     gps_coords: List[List[float]]  # Polygon coordinates [[lat, lon], ...]
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
 
+    # Class: Config
     class Config:
         from_attributes = True
 
 
-# Database table names (for Supabase)
 TABLES = {
     "videos": "videos",
     "analyses": "analyses",
     "detections": "detections",
     "reports": "reports",
-    "road_segments": "road_segments"
+    "road_segments": "road_segments",
 }
-

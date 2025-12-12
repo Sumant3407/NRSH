@@ -1,49 +1,41 @@
-"""
-Download sample road videos and optional GPS metadata for quick testing.
-
-This script downloads small public-domain/sample videos suitable for demo purposes.
-"""
-
-import sys
 import json
+import sys
 from pathlib import Path
+from urllib.error import HTTPError, URLError
 from urllib.request import urlopen
-from urllib.error import URLError, HTTPError
 
 SAMPLES = [
     {
         "name": "base_road_sample.mp4",
-        "url": "https://samplelib.com/lib/preview/mp4/sample-5s.mp4"
+        "url": "https://samplelib.com/lib/preview/mp4/sample-5s.mp4",
     },
     {
         "name": "present_road_sample.mp4",
-        "url": "https://samplelib.com/lib/preview/mp4/sample-10s.mp4"
-    }
+        "url": "https://samplelib.com/lib/preview/mp4/sample-10s.mp4",
+    },
 ]
 
-GPS_BASE = {
-    "0": [12.9716, 77.5946],
-    "30": [12.9717, 77.5947],
-    "60": [12.9718, 77.5948]
-}
+GPS_BASE = {"0": [12.9716, 77.5946], "30": [12.9717, 77.5947], "60": [12.9718, 77.5948]}
 
 GPS_PRESENT = {
     "0": [12.9716, 77.5946],
     "30": [12.9717, 77.59475],
-    "60": [12.97185, 77.5949]
+    "60": [12.97185, 77.5949],
 }
 
 
+# Function: download
 def download(url: str, dest: Path) -> None:
     dest.parent.mkdir(parents=True, exist_ok=True)
     try:
-        with urlopen(url) as r, open(dest, 'wb') as f:
+        with urlopen(url) as r, open(dest, "wb") as f:
             f.write(r.read())
         print(f"Downloaded: {dest}")
     except (URLError, HTTPError) as e:
         print(f"Failed to download {url}: {e}")
 
 
+# Function: main
 def main():
     project_root = Path(__file__).resolve().parents[1]
     uploads = project_root / "uploads" / "samples"
@@ -56,7 +48,6 @@ def main():
             continue
         download(item["url"], dest)
 
-    # Write example GPS metadata JSON files
     gps_dir = uploads
     (gps_dir / "base_gps.json").write_text(json.dumps(GPS_BASE, indent=2))
     (gps_dir / "present_gps.json").write_text(json.dumps(GPS_PRESENT, indent=2))

@@ -1,27 +1,18 @@
-"""Script to verify imports across the NRSH codebase.
-
-Run this from the project root (or execute the script directly):
-
-    python scripts/verify_imports.py
-
-The script adds the project root to `sys.path` and attempts to import
-key modules and verify expected attributes/classes. It exits with code 0
-if all imports succeed, otherwise exits with code 1.
-"""
-
 import importlib
 import sys
 from pathlib import Path
 from types import ModuleType
-from typing import Optional, Tuple, List
+from typing import List, Optional, Tuple
 
 
+# Function: add_project_root_to_path
 def add_project_root_to_path():
     project_root = Path(__file__).resolve().parent.parent
     sys.path.insert(0, str(project_root))
     return project_root
 
 
+# Function: test_import
 def test_import(module_path: str, attr: Optional[str] = None) -> Tuple[bool, str]:
     """Attempt to import module and optionally verify a class exists.
 
@@ -42,6 +33,7 @@ def test_import(module_path: str, attr: Optional[str] = None) -> Tuple[bool, str
     return True, f"OK: {module_path}{'.' + attr if attr else ''}"
 
 
+# Function: print_summary
 def print_summary(results: List[Tuple[str, bool, str]]):
     total = len(results)
     passed = sum(1 for _, ok, _ in results if ok)
@@ -50,7 +42,7 @@ def print_summary(results: List[Tuple[str, bool, str]]):
     print("\nImport Verification Summary")
     print("---------------------------")
     for label, ok, msg in results:
-        mark = "✓" if ok else "✗"
+        mark = "[OK]" if ok else "[FAIL]"
         print(f"{mark} {label}: {msg}")
 
     print("\nTotals:")
@@ -59,36 +51,26 @@ def print_summary(results: List[Tuple[str, bool, str]]):
     print(f"  Failed:  {failed}")
 
 
+# Function: main
 def main():
     project_root = add_project_root_to_path()
     print(f"Project root: {project_root}")
 
     tests: List[Tuple[str, Optional[str]]] = [
-        # Backend core
         ("backend.main", "app"),
-
-        # API routes (no specific attribute expected)
         ("backend.api.routes.video", None),
         ("backend.api.routes.analysis", None),
         ("backend.api.routes.reports", None),
         ("backend.api.routes.dashboard", None),
-
-        # Services
         ("backend.services.config_manager", None),
         ("backend.services.video_service", None),
         ("backend.services.analysis_service", None),
         ("backend.services.database_service", None),
         ("backend.services.report_service", None),
         ("backend.services.dashboard_service", None),
-
-        # Database models
         ("backend.models.database", None),
-
-        # AI models (verify exported class names)
         ("ai_models.detection.detector", "ObjectDetector"),
         ("ai_models.change_detection.change_detector", "ChangeDetector"),
-
-        # Data processing (verify exported class names)
         ("data_processing.frame_extraction", "FrameExtractor"),
         ("data_processing.alignment", "FrameAligner"),
         ("data_processing.preprocessing", "ImagePreprocessor"),
@@ -97,9 +79,8 @@ def main():
     results: List[Tuple[str, bool, str]] = []
     for module_path, attr in tests:
         ok, msg = test_import(module_path, attr)
-        results.append((module_path + ('.' + attr if attr else ''), ok, msg))
+        results.append((module_path + ("." + attr if attr else ""), ok, msg))
 
-    # Cross-module spot checks (repeat some key imports)
     cross_checks: List[Tuple[str, Optional[str]]] = [
         ("ai_models.detection.detector", "ObjectDetector"),
         ("data_processing.frame_extraction", "FrameExtractor"),
