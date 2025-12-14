@@ -30,7 +30,7 @@ This document summarizes the import patterns, dependency map, verification statu
 ------------------------
 
 - Standard library imports: os, sys, json, pathlib, datetime, etc. — ✓ Available
-- Third-party imports: fastapi, pydantic, cv2, numpy, ultralytics, supabase, etc. — ⚠ Requires environment setup per `requirements.txt`
+ - Third-party imports: fastapi, pydantic, cv2, numpy, ultralytics, supabase, etc. — Requires environment setup per `requirements.txt`
 - Internal package imports: Documented above (Dependency Map). These rely on the `sys.path` manipulation pattern.
 
 4. Potential Issues Identified
@@ -39,16 +39,16 @@ This document summarizes the import patterns, dependency map, verification statu
 Issue 1: Circular Import Risk
 - Description: `backend.services.analysis_service` imports from `ai_models` and `data_processing`, both of which import `backend.services.config_manager`.
 - Impact: Potential circular dependency chain `backend.services -> ai_models/data_processing -> backend.services`.
-- Status: ⚠ Monitor at runtime; often safe if imports are simple constants or class definitions but can surface as ImportError in some execution orders.
+ - Status: Monitor at runtime; often safe if imports are simple constants or class definitions but can surface as ImportError in some execution orders.
 
 Issue 2: `backend/models/__init__.py` Import Mismatch
 - Description: The file attempted to import top-level names (`Video`, `Analysis`, etc.) but the actual model definitions in `backend/models/database.py` use `*Model` suffixes.
-- Status: ❌ This would cause ImportError on `from backend.models import Video`.
+ - Status: This would cause ImportError on `from backend.models import Video`.
 - Resolution: Updated `backend/models/__init__.py` to export the correct names (`VideoModel`, `AnalysisModel`, `DetectionModel`, `ReportModel`, `RoadSegmentModel`).
 
 Issue 3: Fragile `project_root` Calculation
 - Description: Different files compute project root with varying `.parent` counts. File relocation or refactors can break imports.
-- Status: ⚠ Fragile and error-prone.
+ - Status: Fragile and error-prone.
 - Recommendation: Prefer installing the package in editable mode (`pip install -e .`) or centralize path logic.
 
 5. Import Testing Recommendations

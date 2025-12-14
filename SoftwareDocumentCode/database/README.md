@@ -63,9 +63,9 @@ from backend.services.database_service import get_database_service
 
 db = get_database_service()
 if db:
-    print("✅ Database connection successful!")
+   print("Database connection successful!")
 else:
-    print("❌ Database connection failed. Check your credentials.")
+   print("Database connection failed. Check your credentials.")
 ```
 
 ## Database Schema

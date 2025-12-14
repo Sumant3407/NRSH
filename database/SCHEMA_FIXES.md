@@ -95,6 +95,6 @@ SELECT gps_coords, gps_lat, gps_lon FROM detections WHERE gps_coords IS NOT NULL
 
 ## Compatibility
 
-✅ **Backward Compatible:** Existing code using `gps_coords` array will continue to work
-✅ **Forward Compatible:** New code can use either `gps_coords` array or `gps_lat`/`gps_lon` columns
-✅ **Performance:** Better indexing for geospatial queries
+**Backward Compatible:** Existing code using `gps_coords` array will continue to work
+**Forward Compatible:** New code can use either `gps_coords` array or `gps_lat`/`gps_lon` columns
+**Performance:** Better indexing for geospatial queries

@@ -69,10 +69,10 @@ See `database/schema.sql` for full schema details.
 
 ## Features
 
-✅ **Automatic Fallback**: If Supabase is not configured, the system uses file-based storage
-✅ **Real-time Updates**: Status updates are stored in database
-✅ **Efficient Queries**: Indexed tables for fast lookups
-✅ **Scalable**: Handles large volumes of data
+- **Automatic Fallback**: If Supabase is not configured, the system uses file-based storage
+- **Real-time Updates**: Status updates are stored in database
+- **Efficient Queries**: Indexed tables for fast lookups
+- **Scalable**: Handles large volumes of data
 
 ## Troubleshooting
 

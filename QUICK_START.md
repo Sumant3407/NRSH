@@ -212,8 +212,8 @@ python scripts/test_database.py
 ```
 
 You should see:
-- ✅ Database connection successful (if configured correctly)
-- ⚠️ Database not configured (system will use file-based storage)
+- Database connection successful (if configured correctly)
+- Database not configured (system will use file-based storage)
 
 ## Troubleshooting
 
@@ -295,8 +295,8 @@ deactivate
 
 ## Next Steps
 
-1. ✅ Backend and frontend are running
-2. ✅ (Optional) Supabase database configured
+1. Backend and frontend are running
+2. (Optional) Supabase database configured
 3. Open http://localhost:3000 in your browser
 4. Upload test media (images or videos) for base and present
 5. Run analysis

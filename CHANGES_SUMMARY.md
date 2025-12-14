@@ -145,8 +145,8 @@ python scripts/test_database.py
 
 ## Compatibility
 
-- ✅ Backward compatible with file-based storage
-- ✅ Works without Supabase configuration
-- ✅ No breaking changes to existing API
-- ✅ All existing functionality preserved
+- Backward compatible with file-based storage
+- Works without Supabase configuration
+- No breaking changes to existing API
+- All existing functionality preserved
 
