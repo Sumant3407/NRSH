@@ -4,7 +4,7 @@
 
 An AI-powered system for comparative analysis of road infrastructure elements using computer vision and deep learning.
 
-## 🎯 Features
+## Features
 
 - **AI-Based Video Analysis**: Compare base vs present road videos to detect deterioration
 - **Single-Media Detection**: Run detection on a single image or video (no comparison) via UI toggle
@@ -15,7 +15,7 @@ An AI-powered system for comparative analysis of road infrastructure elements us
 - **Interactive Dashboard**: Web interface for playback, analysis, and validation
 - **Database Integration**: Supabase PostgreSQL database for scalable data storage
 
-## 🏗️ System Architecture
+## System Architecture
 
 ```text
 ┌─────────────────┐
@@ -44,7 +44,7 @@ An AI-powered system for comparative analysis of road infrastructure elements us
 └─────────────────┘
 ```
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 NRSH/
@@ -73,7 +73,7 @@ NRSH/
 └── README.md
 ```
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 
@@ -184,7 +184,7 @@ npm run dev
 3. **Access dashboard:**
 Open [http://localhost:3000](http://localhost:3000) in your browser
 
-## 🔧 Configuration
+## Configuration
 
 Edit `config/config.yaml` to customize:
 - Model paths
@@ -201,7 +201,7 @@ repository root. Common variables include `SUPABASE_URL`, `SUPABASE_KEY`,
 Copy `.env.example` to `.env` for local development and modify values as
 needed.
 
-## 🛠️ Development & Formatting
+## Development & Formatting
 
 We use common formatting tools to keep code consistent across the repository.
 
@@ -231,7 +231,7 @@ npm run lint
 We recommend adding these to a pre-commit hook (for example using `pre-commit`) to enforce formatting on commit.
 
 
-## 📊 Usage
+## Usage
 
 ### Upload Videos
 
@@ -257,7 +257,7 @@ We recommend adding these to a pre-commit hook (for example using `pre-commit`) 
    - Issue heatmaps
    - Detailed findings
 
-## 🎓 Technical Details
+## Technical Details
 
 ### AI Models
 
@@ -281,7 +281,7 @@ We recommend adding these to a pre-commit hook (for example using `pre-commit`) 
 - **Geospatial Precision**: GPS alignment accuracy
 - **Processing Speed**: FPS for video analysis
 
-## 🏆 Innovation Highlights
+## Innovation Highlights
 
 1. **Temporal Comparison**: AI-driven before-after analysis
 2. **Geospatial Intelligence**: GPS-tagged detections with map visualization
@@ -289,7 +289,7 @@ We recommend adding these to a pre-commit hook (for example using `pre-commit`) 
 4. **Auditor Feedback Loop**: Validation mechanism for continuous improvement
 5. **Real-time Processing**: Optimized pipeline for quick insights
 
-## 💻 Software & Technologies Utilized
+## Software & Technologies Utilized
 
 ### Programming Languages
 
